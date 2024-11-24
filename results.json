@@ -1,10 +1,1 @@
-{
-    "numberOfFruitsAndVeggies": 0,
-    "numberOfProteins": 0,
-    "numberOfGrains": 1,
-    "fruits_and_vegetables": {},
-    "protein": {},
-    "grains": {
-        "rice": 1
-    }
-}
+{}
