@@ -2,19 +2,23 @@ import os
 import json
 
 class Calculations:
-
-
     
     def load_results(self, filename):
         """Load previously saved results from a JSON file."""
         if os.path.exists(filename) and os.path.getsize(filename) > 0:
             with open(filename, 'r') as f:
                 data = json.load(f)
+                self.numberOfFruitsAndVeggies = data.get('numberOfFruitsAndVeggies', 0)
+                self.numberOfProteins = data.get('numberOfProteins', 0)
+                self.numberOfGrains = data.get('numberOfGrains', 0)
                 self.fruits_and_vegetables = data.get('fruits_and_vegetables', {})
                 self.protein = data.get('protein', {})
                 self.grains = data.get('grains', {})
         else:
             # If the file does not exist or is empty, initialize empty dictionaries
+            self.numberOfFruitsAndVeggies = 0
+            self.numberOfProteins = 0
+            self.numberOfGrains = 0
             self.fruits_and_vegetables = {}
             self.protein = {}
             self.grains = {}
@@ -22,6 +26,9 @@ class Calculations:
     def save_results(self, filename):
             """Save current results to a JSON file."""
             data = {
+                'numberOfFruitsAndVeggies': self.numberOfFruitsAndVeggies,
+                'numberOfProteins': self.numberOfProteins,
+                'numberOfGrains': self.numberOfGrains,
                 'fruits_and_vegetables': self.fruits_and_vegetables,
                 'protein': self.protein,
                 'grains': self.grains
@@ -30,6 +37,9 @@ class Calculations:
                 json.dump(data, f, indent=4)  # Save data in a readable format
 
     def __init__(self):
+            self.numberOfFruitsAndVeggies =0
+            self.numberOfProteins =0
+            self.numberOfGrains=0
             self.fruits_and_vegetables= {} 
             self.protein={}
             self.grains={}
@@ -48,11 +58,41 @@ class Calculations:
             for i in range(len(groupings)):
                 if len(groupings[i]) ==3:
                     if groupings[i][1] == "Vegetable":
+                        self.numberOfFruitsAndVeggies +=1
                         self.addDictionary(i, self.fruits_and_vegetables, groupings)
                     elif groupings[i][1] == "Protein":
+                        self.numberOfProteins +=1
                         self.addDictionary(i, self.protein, groupings)
                     elif groupings[i][1] == "Grains":
+                        self.numberOfGrains +=1
                         self.addDictionary(i, self.grains, groupings)
+            return [self.numberOfFruitsAndVeggies, self.numberOfProteins, self.numberOfGrains]
+
+
+
+
+    def addDictionaryArea(self, i, dic, gr):  # Add self here
+            # Corrected to use the key as a string instead of a set
+            key = gr[i][0]  # Get the item name from the tuple
+            val = dic.get(key)  # Retrieve the current count
+
+            if val is None:
+                dic[key] = gr[i][2]  # Initialize count if the item is not in the dictionary
+            else:
+                dic[key] = val+ gr[i][2]
+
+    def classifyArea(self, groupings):
+            for i in range(len(groupings)):
+                if len(groupings[i]) ==3:
+                    if groupings[i][1] == "Vegetable":
+                        self.addDictionaryArea(i, self.fruits_and_vegetables, groupings)
+                    elif groupings[i][1] == "Protein":
+                        self.addDictionaryArea(i, self.protein, groupings)
+                    elif groupings[i][1] == "Grains":
+                        self.addDictionaryArea(i, self.grains, groupings)
+
+    
+            
 
     def resetJson(self,filename):
         with open(filename, 'w') as f:
