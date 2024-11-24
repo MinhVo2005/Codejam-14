@@ -55,6 +55,8 @@ class Calculations:
                 dic[key] = val + 1  # Increment count if the item already exists
 
     def classify(self, groupings):
+            if groupings == []:
+                 return[0,0,0]
             for i in range(len(groupings)):
                 if len(groupings[i]) ==3:
                     if groupings[i][1] == "Vegetable":

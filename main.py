@@ -4,22 +4,6 @@ import classification as cl
 
 
 MINIMUM = 0.5
-# def rescale_image (image_path):
-#     image = cv2.imread(image_path)
-
-#     # Get the original dimensions
-#     height, width = image.shape[:2]
-#     if width < 640:
-#         return image
-
-#     # Define the new width and calculate the height to preserve the aspect ratio
-#     new_width = 640
-#     new_height = int((new_width / width) * height)
-
-#     # Resize the image
-#     resized_image = cv2.resize(image, (new_width, new_height))
-#     return resized_image
-
 def get_class_and_conf(model, image_path, name_model):
     result = model.predict(image_path, conf = MINIMUM)[0]
     boxes = result.boxes
@@ -33,9 +17,9 @@ def get_class_and_conf(model, image_path, name_model):
 
  
 def run_model(image):
-    model1 = YOLO(r'model/best_vegetable.pt')
-    model2 = YOLO(r'model/best_meat.pt')
-    model3 = YOLO(r'model/best_whole_grain.pt')
+    model1 = YOLO(r'best_vegetable.pt')
+    model2 = YOLO(r'best_meat.pt')
+    model3 = YOLO(r'best_whole_grain.pt')
     array1 = get_class_and_conf(model1, image,'Vegetable')
     array2 = get_class_and_conf(model2, image, 'Protein')
     array3 = get_class_and_conf(model3, image, 'Grains')
@@ -57,4 +41,5 @@ def store_data(sample):
 
     # Save the updated results back to the JSON file
     cal.save_results(filename)
+
 

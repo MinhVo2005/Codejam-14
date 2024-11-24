@@ -3,7 +3,10 @@ import pandas as pd
 from datetime import datetime
 from PIL import Image
 import plotly.express as px
-import random
+import main
+import classification as cl
+import matplotlib.pyplot as plt
+import numpy as np
 #Size ajustor
 
 st.markdown(
@@ -297,43 +300,86 @@ if page == "Register Food":
         image = Image.open(food_image or uploaded_image)
         st.image(image, caption="Uploaded Food Image")
         st.session_state["uploaded_image"] = image
+        data = main.run_model(image)
+         
+
+    # Initialize session state for the to-do list
+    if "todo_list" not in st.session_state:
+        st.session_state.todo_list = []
+
+    # Title
+    st.title("To-Do List App")
+
+    # Add a new task
+    with st.form("Add Task"):
+        new_task = st.text_input("Enter a task", placeholder="e.g., Buy groceries")
+        submitted = st.form_submit_button("Add Task")
+        if submitted:
+            if new_task:
+                st.session_state.todo_list.append(new_task)
+                st.success(f"Task '{new_task}' added!")
+            else:
+                st.warning("Task cannot be empty.")
+
+    # Display the current to-do list
+    st.subheader("Your To-Do List")
+    if st.session_state.todo_list:
+        for index, task in enumerate(st.session_state.todo_list):
+            # Display each task with a "Remove" button
+            col1, col2 = st.columns([0.8, 0.2])
+            with col1:
+                st.write(f"{index + 1}. {task}")
+            with col2:
+                if st.button("Remove", key=f"remove-{index}"):
+                    st.session_state.todo_list.pop(index)
+                    st.experimental_rerun()  # Refresh the page to update the list
+    else:
+        st.info("Your to-do list is empty!")
+
+# Footer
+st.markdown("---")
+st.write("Simple to-do list app using Streamlit.")
 
 
-        
+if st.button("Register Food"):
+    try:   
+        cal = cl.Calculations()
+        cal.load_results('results.json')
+        labels = 'Vegetable','Protein','Grain'
+        sizes = cal.classify(data)
 
-    food_name = st.text_input("Food Name", placeholder="Enter the name of the food item")
-    food_group = st.selectbox("Select Alimentary Group", ["Proteins", "Grains", "Dairy", "Fruits & Veggies"])
+        fig1, ax1 = plt.subplots()
+        ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
+                shadow=True, startangle=90)
+        ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
-    if st.button("Register Food"):
-        if food_name and food_group:
-            st.session_state.food_data = pd.concat(
-                [st.session_state.food_data, pd.DataFrame({
-                    "Timestamp": [datetime.now()],
-                    "Food Item": [food_name],
-                    "Group": [food_group]
-                })], ignore_index=True)
-            st.success(f"Registered {food_name} under {food_group} group!")
-        else:
-            st.error("Please provide both the food name and group.")
+        st.pyplot(fig1)
+        cal.save_results('results.json')
+    except NameError:
+        pass
+
+if st.button('Reset'):
+    reset = cl.Calculations()
+    reset.resetJson('results.json')
 
 # Tracked Items Page
 elif page == "Tracked Items":
     st.header("Tracked Food Items")
-    if not st.session_state.food_data.empty:
-        st.dataframe(st.session_state.food_data)
-        st.download_button(
-            "Download Food Data",
-            data=st.session_state.food_data.to_csv(index=False),
-            file_name="food_data.csv",
-            mime="text/csv",
-        )
-        group_counts = st.session_state.food_data["Group"].value_counts().reset_index()
-        fig = px.pie(
-            group_counts.rename(columns={"index": "Group", "Group": "Count"}),
-            names="Group",
-            values="Count",
-            title="Distribution of Alimentary Groups",
-        )
-        st.plotly_chart(fig, use_container_width=True)
-    else:
-        st.info("No food items registered yet.")
+if not st.session_state.food_data.empty:
+    st.dataframe(st.session_state.food_data)
+    st.download_button(
+        "Download Food Data",
+        data=st.session_state.food_data.to_csv(index=False),
+        file_name="food_data.csv",
+        mime="text/csv",
+    )
+    group_counts = st.session_state.food_data["Group"].value_counts().reset_index()
+    fig = px.pie(
+        group_counts.rename(columns={"index": "Group", "Group": "Count"}),
+        names="Group",
+        values="Count",
+        title="Distribution of Alimentary Groups",
+    )
+    st.plotly_chart(fig, use_container_width=True)
+else:
+    st.info("No food items registered yet.")
