@@ -4,21 +4,21 @@ import classification as cl
 
 
 MINIMUM = 0.5
-def rescale_image (image_path):
-    image = cv2.imread(image_path)
+# def rescale_image (image_path):
+#     image = cv2.imread(image_path)
 
-    # Get the original dimensions
-    height, width = image.shape[:2]
-    if width < 640:
-        return image
+#     # Get the original dimensions
+#     height, width = image.shape[:2]
+#     if width < 640:
+#         return image
 
-    # Define the new width and calculate the height to preserve the aspect ratio
-    new_width = 640
-    new_height = int((new_width / width) * height)
+#     # Define the new width and calculate the height to preserve the aspect ratio
+#     new_width = 640
+#     new_height = int((new_width / width) * height)
 
-    # Resize the image
-    resized_image = cv2.resize(image, (new_width, new_height))
-    return resized_image
+#     # Resize the image
+#     resized_image = cv2.resize(image, (new_width, new_height))
+#     return resized_image
 
 def get_class_and_conf(model, image_path, name_model):
     result = model.predict(image_path, conf = MINIMUM)[0]
@@ -32,21 +32,18 @@ def get_class_and_conf(model, image_path, name_model):
     return array
 
  
-def run_model(image_path):
-    model1 = YOLO('best_vegetable.pt')
-    model2 = YOLO('best_meat.pt')
-    model3 = YOLO('best_whole_grain.pt')
-    array1 = get_class_and_conf(model1, image_path,'Vegetable')
-    array2 = get_class_and_conf(model2, image_path, 'Protein')
-    array3 = get_class_and_conf(model3, image_path, 'Grains')
+def run_model(image):
+    model1 = YOLO(r'model/best_vegetable.pt')
+    model2 = YOLO(r'model/best_meat.pt')
+    model3 = YOLO(r'model/best_whole_grain.pt')
+    array1 = get_class_and_conf(model1, image,'Vegetable')
+    array2 = get_class_and_conf(model2, image, 'Protein')
+    array3 = get_class_and_conf(model3, image, 'Grains')
     return array1 + array2 + array3
 
 #Here is the main file
-path =r"C:\GitHub\Codejam-14\test\k_Photo_Recipes_2024-04-fried-rice_fried-rice-060_1.jpg"
-rescale = rescale_image(path)
-sample = run_model(rescale)
-print(sample)
-if __name__ == "__main__":
+
+def store_data(sample):
     filename = 'results.json'
     
     # Create a new instance of Calculations
@@ -54,8 +51,6 @@ if __name__ == "__main__":
     
     # Load existing results from the JSON file or initialize empty dictionaries
     cal.load_results(filename)
-
-    # New groupings to classify
 
     # Classify the new groupings
     cal.classify(sample)
