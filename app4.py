@@ -14,12 +14,12 @@ st.markdown(
     <style>
     /* Base font size for the entire app */
     html, body, [class*="stMarkdown"], [class*="stTitle"], [class*="stHeader"], [class*="stText"] {
-        font-size: 18px; /* Adjust this value to globally increase text size */
+        font-size: 24px; /* Adjust this value to globally increase text size */
     }
     
     /* Increase size of headings */
     h1 {
-        font-size: 2.5rem !important;
+        font-size: 2.5rem !important;   
     }
     h2 {
         font-size: 2rem !important;
@@ -30,7 +30,7 @@ st.markdown(
 
     /* Sidebar text size */
     .sidebar .sidebar-content, .css-1d391kg { 
-        font-size: 18px !important;
+        font-size: 30px !important;
     }
 
     /* Button text size */
@@ -38,10 +38,7 @@ st.markdown(
         font-size: 18px !important; /* Ensure buttons have larger text */
     }
 
-    /* Increase font size in dataframes or tables */
-    .stDataFrame, .stTable {
-        font-size: 16px !important; /* Adjust for table content */
-    }
+
     </style>
     """,
     unsafe_allow_html=True,
@@ -64,7 +61,7 @@ st.markdown(
     [data-testid="stSidebar"] {
         background-color: #00a4eb; /* Blue background for the sidebar */
         color: white; /* White text color */
-        font-size: 16px; /* Adjust sidebar text size */
+        font-size: 30px; /* Adjust sidebar text size */
         padding: 20px; /* Add some padding */
     }
 
@@ -243,7 +240,7 @@ st.markdown(
 )
 
 # Sidebar navigation
-page = st.sidebar.selectbox("Navigate", ["Home", "Register Food", "Tracked Items"])
+page = st.sidebar.selectbox("", ["Home", "Register Food", "Tracked Items"])
 
 # Initialize session state for food data
 if "food_data" not in st.session_state:
@@ -293,15 +290,16 @@ if page == "Home":
 # Register Food Page
 if page == "Register Food":
     st.header("Register Food Item")
-    food_image = st.camera_input("Take a picture of the food item:")
-    uploaded_image = st.file_uploader("Upload an image file", type=["jpg", "jpeg", "png"])
+    food_image = st.camera_input("")
+    uploaded_image = st.file_uploader("", type=["jpg", "jpeg", "png"])
 
     if food_image or uploaded_image:
         image = Image.open(food_image or uploaded_image)
         image = image.resize((640,640))
-        st.image(image, caption="Uploaded Food Image",)
+        st.image(image)
         #st.session_state["uploaded_image"] = image
         data = main.run_model(image)
+        st.info("")
 
 
     if st.button("Register Food"):
@@ -337,8 +335,8 @@ if page == "Tracked Items":
             st.pyplot(fig1)
         except:
             st.warning("UH OH! Something went wrong! Try to add some items first.")
-    else:
-        st.info("No food items registered yet.")
+    # else:
+    #     st.info("No food items registered yet.")
     
     if st.button('Reset'):
         reset = cl.Calculations()
