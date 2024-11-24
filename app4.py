@@ -59,7 +59,7 @@ st.markdown(
 
     /* Sidebar Styling */
     [data-testid="stSidebar"] {
-        background-color: #00a4eb; /* Blue background for the sidebar */
+        background-color: #A7C7E7; /* Blue background for the sidebar */
         color: white; /* White text color */
         font-size: 30px; /* Adjust sidebar text size */
         padding: 20px; /* Add some padding */
@@ -184,23 +184,24 @@ st.markdown(
     <div class="emoji-container">
         <div class="emoji" style="left: 30%; top: 70%;">🍎</div>
         <div class="emoji" style="left: 15%; top: 60%;">🍌</div>
-        <div class="emoji" style="left: 10%; top: 65%;">🍇</div>
-        <div class="emoji" style="left: 10%; top: 70%;">🍉</div>
-        <div class="emoji" style="left: 30%; top: 60%;">🍒</div>
+        <div class="emoji" style="left: 20%; top: 65%;">🍇</div>
+        <div class="emoji" style="left: 40%; top: 70%;">🍉</div>
+        <div class="emoji" style="left: 40%; top: 60%;">🍒</div>
         <div class="emoji" style="left: 20%; top: 55%;">🍓</div>
         <div class="emoji" style="left: 35%; top: 70%;">🍑</div>
-        <div class="emoji" style="left: 10%; top: 70%;">🍍</div>
+        <div class="emoji" style="left: 50%; top: 70%;">🍍</div>
         <div class="emoji" style="left: 10%; top: 70%;">🥝</div>
         <div class="emoji" style="left: 30%; top: 65%;">🥭</div>
-        <div class="emoji" style="left: 30%; top: 65%;">🍏</div>
+        <div class="emoji" style="left: 40%; top: 65%;">🍏</div>
         <div class="emoji" style="left: 30%; top: 65%;">🍐</div>
-        <div class="emoji" style="left: 10%; top: 80%;">🍋</div>
-        <div class="emoji" style="left: 5%; top: 65%;">🍊</div>
+        <div class="emoji" style="left: 40%; top: 80%;">🍋</div>
+        <div class="emoji" style="left: 25%; top: 65%;">🍊</div>
         <div class="emoji" style="left: 20%; top: 65%;">🍋</div>
         <div class="emoji" style="left: 30%; top: 75%;">🥭</div>
-        <div class="emoji" style="left: 5%; top: 75%;">🍏</div>
+        <div class="emoji" style="left:5 25%; top: 65%;">🍏</div>
         <div class="emoji" style="left: 35%; top: 75%;">🍐</div>
     </div>
+    
     """,
     unsafe_allow_html=True
 )
@@ -255,7 +256,7 @@ if page == "Home":
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 35vh; /* Full screen height */
+        height: 45vh; /* Full screen height */
         width: 100%; /* Full screen width */
         position: relative;
     }
@@ -275,12 +276,11 @@ if page == "Home":
 
     <div class="centered-message-container">
         <div class="message-box">
-            Welcome to the Food Tracker App!<br>
-            This app allows you to:<br>
-            Capture food images using your camera.<br>
-            Register food items into groups (e.g., Proteins, Grains).<br>
-            Track and visualize your registered food items.<br>
-            Upload food images directly from your device.
+            Track your food, track your health effortlessly.<br>
+            Fruity makes it easier than ever to monitor your eating habits. <br>
+            Simply snap a photo of your meal, and let our AI-powered tool do the rest! <br>
+            From calorie counts to detailed nutritional breakdowns, we provide you with the insights you need to make informed choices and stay on track with your health goals. <br>
+            Join us in making healthy eating fun, interactive, and simple. Your path to better nutrition starts here!<br>
         </div>
     </div>
     """,
@@ -299,7 +299,8 @@ if page == "Register Food":
         st.image(image)
         #st.session_state["uploaded_image"] = image
         data = main.run_model(image)
-        st.info("")
+        for tup in data:
+            st.info(f"Name: {tup[0]}, Food Group: {tup[1]}")
 
 
     if st.button("Register Food"):
