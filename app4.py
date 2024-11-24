@@ -336,50 +336,50 @@ if page == "Register Food":
     else:
         st.info("Your to-do list is empty!")
 
-# Footer
-st.markdown("---")
-st.write("Simple to-do list app using Streamlit.")
+    # Footer
+    st.markdown("---")
+    st.write("Simple to-do list app using Streamlit.")
 
 
-if st.button("Register Food"):
-    try:   
-        cal = cl.Calculations()
-        cal.load_results('results.json')
-        labels = 'Vegetable','Protein','Grain'
-        sizes = cal.classify(data)
+    if st.button("Register Food"):
+        try:   
+            cal = cl.Calculations()
+            cal.load_results('results.json')
+            labels = 'Vegetable','Protein','Grain'
+            sizes = cal.classify(data)
 
-        fig1, ax1 = plt.subplots()
-        ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
-                shadow=True, startangle=90)
-        ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+            fig1, ax1 = plt.subplots()
+            ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
+                    shadow=True, startangle=90)
+            ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
-        st.pyplot(fig1)
-        cal.save_results('results.json')
-    except NameError:
-        pass
+            st.pyplot(fig1)
+            cal.save_results('results.json')
+        except NameError:
+            pass
 
-if st.button('Reset'):
-    reset = cl.Calculations()
-    reset.resetJson('results.json')
+    if st.button('Reset'):
+        reset = cl.Calculations()
+        reset.resetJson('results.json')
 
 # Tracked Items Page
 elif page == "Tracked Items":
     st.header("Tracked Food Items")
-if not st.session_state.food_data.empty:
-    st.dataframe(st.session_state.food_data)
-    st.download_button(
-        "Download Food Data",
-        data=st.session_state.food_data.to_csv(index=False),
-        file_name="food_data.csv",
-        mime="text/csv",
-    )
-    group_counts = st.session_state.food_data["Group"].value_counts().reset_index()
-    fig = px.pie(
-        group_counts.rename(columns={"index": "Group", "Group": "Count"}),
-        names="Group",
-        values="Count",
-        title="Distribution of Alimentary Groups",
-    )
-    st.plotly_chart(fig, use_container_width=True)
-else:
-    st.info("No food items registered yet.")
+    if not st.session_state.food_data.empty:
+        st.dataframe(st.session_state.food_data)
+        st.download_button(
+            "Download Food Data",
+            data=st.session_state.food_data.to_csv(index=False),
+            file_name="food_data.csv",
+            mime="text/csv",
+        )
+        group_counts = st.session_state.food_data["Group"].value_counts().reset_index()
+        fig = px.pie(
+            group_counts.rename(columns={"index": "Group", "Group": "Count"}),
+            names="Group",
+            values="Count",
+            title="Distribution of Alimentary Groups",
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.info("No food items registered yet.")
