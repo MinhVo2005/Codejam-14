@@ -3,3 +3,8 @@ Dependency:
 Ultralytics
 Streamlit
 plotly
+
+How to run?
+- download all of the dependency
+- in bash, run: streamlit run app4.plotly
+
